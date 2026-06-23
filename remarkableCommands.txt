@@ -1,3 +1,9 @@
+#Backup original templates.json file
+firmware_version=`grep "IMG_VERSION=" /etc/os-release | cut -d= -f2 | tr -d '"'`
+mkdir -p ~/templateUploader
+cp /usr/share/remarkable/templates/templates.json ~/templateUploader/templates_backup_$firmware_version.json
+
+#Create new entry in templates.json
 cd /usr/share/remarkable/templates/
 nbLines=`cat templates.json | wc -l`
 nbLines=$((nbLines-3))
