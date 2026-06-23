@@ -1,1 +1,1 @@
-ssh root@10.11.99.1 "cd /usr/share/remarkable/templates/;nbLines=`cat templates.json | wc -l`;nbLines=$((nbLines-3));head -n $nbLines templates.json  > temp.json && mv temp.json templates.json;printf '    },\n    {\n      \"name\": \"templatename\",\n      \"filename\": \"name\",\n      \"iconCode\": \"\\ue9fe\",\n      "category\": [\"Custom\"]\n    }\n' >> templates.json;printf '  ]\n}\n' >> templates.json"
+ssh root@10.11.99.1 < remarkableCommands.txt
