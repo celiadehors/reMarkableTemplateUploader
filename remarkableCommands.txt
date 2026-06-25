@@ -1,3 +1,9 @@
+templateFile="$1"
+templateName="$2"
+templateFilename="${templateFile//\\//}"
+templateFilename="${templateFilename##*/}"
+templateFilename="${templateFilename%.*}"
+
 #Backup original templates.json file
 firmware_version=`grep "IMG_VERSION=" /etc/os-release | cut -d= -f2 | tr -d '"'`
 mkdir -p ~/templateUploader
@@ -8,7 +14,7 @@ cd /usr/share/remarkable/templates/
 nbLines=`cat templates.json | wc -l`
 nbLines=$((nbLines-3))
 head -n $nbLines templates.json > temp.json && mv temp.json templates.json
-printf '    },\n    {\n      \"name\": \"TestCustomTemplate\",\n      \"filename\": \"mycustomtemplate\",\n      \"iconCode\": \"\\ue9fe\",\n      "categories\": [\"Custom\"]\n    }\n' >> templates.json
+printf '    },\n    {\n      \"name\": \"'${templateName}'\",\n      \"filename\": \"'${templateFilename}'\",\n      \"iconCode\": \"\\ue9fe\",\n      "categories\": [\"Custom\"]\n    }\n' >> templates.json
 printf '  ]\n}\n' >> templates.json
 
 #Restart xochitl service
