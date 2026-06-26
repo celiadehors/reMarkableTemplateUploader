@@ -6,7 +6,10 @@ templateFilename="${templateFilename%.*}"
 #Backup original templates.json file
 firmware_version=$(grep "IMG_VERSION=" /etc/os-release | cut -d= -f2 | tr -d '"')
 mkdir -p ~/templateUploader
-cp /usr/share/remarkable/templates/templates.json ~/templateUploader/templates_backup_$firmware_version.json
+backup_path="$HOME/templateUploader/templates_backup_$firmware_version.json"
+if [ ! -f $backup_path ]; then
+	cp /usr/share/remarkable/templates/templates.json $backup_path
+fi
 
 #Create new entry in templates.json
 cd /usr/share/remarkable/templates/ || exit 1
