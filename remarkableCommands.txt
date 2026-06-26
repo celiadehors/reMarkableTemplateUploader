@@ -1,21 +1,29 @@
 templateFile="$1"
 templateName="$2"
-templateFilename="${templateFile//\\//}"
-templateFilename="${templateFilename##*/}"
+templateFilename=$(basename $templateFile)
 templateFilename="${templateFilename%.*}"
 
 #Backup original templates.json file
-firmware_version=`grep "IMG_VERSION=" /etc/os-release | cut -d= -f2 | tr -d '"'`
+firmware_version=$(grep "IMG_VERSION=" /etc/os-release | cut -d= -f2 | tr -d '"')
 mkdir -p ~/templateUploader
 cp /usr/share/remarkable/templates/templates.json ~/templateUploader/templates_backup_$firmware_version.json
 
 #Create new entry in templates.json
-cd /usr/share/remarkable/templates/
-nbLines=`cat templates.json | wc -l`
+cd /usr/share/remarkable/templates/ || exit 1
+nbLines=$(wc -l < templates.json)
 nbLines=$((nbLines-3))
 head -n $nbLines templates.json > temp.json && mv temp.json templates.json
-printf '    },\n    {\n      \"name\": \"'${templateName}'\",\n      \"filename\": \"'${templateFilename}'\",\n      \"iconCode\": \"\\ue9fe\",\n      "categories\": [\"Custom\"]\n    }\n' >> templates.json
-printf '  ]\n}\n' >> templates.json
+cat <<-EOF >> templates.json
+    },
+    {
+      "name": "${templateName}",
+      "filename": "${templateFilename}",
+      "iconCode": "\ue9fe",
+      "categories": ["Custom"]
+    }
+  ]
+}
+EOF
 
 #Restart xochitl service
 systemctl restart xochitl
